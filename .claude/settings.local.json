@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(venv/Scripts/python.exe scripts/seed_urgent.py)"
+    ]
+  }
+}
