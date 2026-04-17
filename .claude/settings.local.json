@@ -2,6 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(venv/Scripts/python.exe scripts/seed_urgent.py)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Miodrag\\development\\sapko"
     ]
   }
 }
