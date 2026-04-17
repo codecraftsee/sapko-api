@@ -45,9 +45,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ensure upload directory exists and serve it statically.
-Path(settings.upload_dir).mkdir(parents=True, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=settings.upload_dir), name="uploads")
+# Serve uploads locally only when Supabase Storage is not configured.
+if not (settings.supabase_url and settings.supabase_key):
+    Path(settings.upload_dir).mkdir(parents=True, exist_ok=True)
+    app.mount("/uploads", StaticFiles(directory=settings.upload_dir), name="uploads")
 
 app.include_router(auth.router)
 app.include_router(users.router)

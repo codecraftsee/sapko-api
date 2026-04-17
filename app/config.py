@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7
 
-    allowed_origins: str = "http://localhost:4200"
+    allowed_origins: str = "http://localhost:4200,https://sapko.vercel.app"
     frontend_url: str = "http://localhost:4200"
 
     smtp_host: str = "sandbox.smtp.mailtrap.io"
@@ -19,6 +19,10 @@ class Settings(BaseSettings):
     smtp_from: str = "noreply@sapko.rs"
 
     upload_dir: str = "./uploads"
+
+    supabase_url: str = ""
+    supabase_key: str = ""
+    supabase_bucket: str = "sapko"
 
     class Config:
         env_file = ".env"
