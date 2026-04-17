@@ -8,7 +8,7 @@ connect_args = {}
 engine_kwargs = {"pool_pre_ping": True}
 
 if settings.database_url.startswith("postgresql"):
-    connect_args["sslmode"] = "require"
+    # Supabase connection strings already include sslmode in the URL.
     engine_kwargs.update({"pool_size": 5, "max_overflow": 10})
 elif settings.database_url.startswith("sqlite"):
     connect_args["check_same_thread"] = False
