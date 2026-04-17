@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(venv/Scripts/python.exe scripts/seed_urgent.py)"
+      "Bash(venv/Scripts/python.exe scripts/seed_urgent.py)",
+      "Read(//c/Users/Miodrag/development/dental-ordination-api/**)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Miodrag\\development\\sapko"
