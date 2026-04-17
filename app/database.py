@@ -7,16 +7,16 @@ settings = get_settings()
 connect_args = {}
 engine_kwargs = {"pool_pre_ping": True}
 
-if settings.database_url.startswith("postgresql"):
-    # Supabase connection strings already include sslmode in the URL.
+db_url = settings.database_url
+if db_url.startswith("postgresql"):
     engine_kwargs.update({"pool_size": 5, "max_overflow": 10})
-elif settings.database_url.startswith("sqlite"):
+elif db_url.startswith("sqlite"):
     connect_args["check_same_thread"] = False
 
 if connect_args:
     engine_kwargs["connect_args"] = connect_args
 
-engine = create_engine(settings.database_url, **engine_kwargs)
+engine = create_engine(db_url, **engine_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
