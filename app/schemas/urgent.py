@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional, List, Any
 from app.models.urgent import UrgentType, UrgentStatus
 from app.models.pet import Species
+from app.schemas.user import UserPublic
 
 
 class UrgentRequestPhotoResponse(BaseModel):
@@ -49,6 +50,7 @@ class UrgentRequestResponse(BaseModel):
     extra_data: Optional[dict[str, Any]] = None
     created_at: datetime
     photos: List[UrgentRequestPhotoResponse] = []
+    author: Optional[UserPublic] = None
 
     class Config:
         from_attributes = True

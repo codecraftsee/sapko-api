@@ -23,7 +23,9 @@ def list_my_donors(
         .all()
     )
     for r in regs:
-        r.pet = db.query(Pet).filter(Pet.id == r.pet_id).first()
+        pet = db.query(Pet).filter(Pet.id == r.pet_id).first()
+        r.pet = pet
+        r.owner = db.query(User).filter(User.id == pet.owner_id).first() if pet else None
     return regs
 
 
@@ -47,7 +49,9 @@ def list_donors(
         q = q.filter(User.city == city)
     regs = q.all()
     for r in regs:
-        r.pet = db.query(Pet).filter(Pet.id == r.pet_id).first()
+        pet = db.query(Pet).filter(Pet.id == r.pet_id).first()
+        r.pet = pet
+        r.owner = db.query(User).filter(User.id == pet.owner_id).first() if pet else None
     return regs
 
 

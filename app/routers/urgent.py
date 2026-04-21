@@ -39,7 +39,10 @@ def list_urgent(
         q = q.filter(UrgentRequest.status == status_filter)
     else:
         q = q.filter(UrgentRequest.status == UrgentStatus.OPEN)
-    return q.order_by(UrgentRequest.created_at.desc()).offset(offset).limit(limit).all()
+    items = q.order_by(UrgentRequest.created_at.desc()).offset(offset).limit(limit).all()
+    for r in items:
+        r.author = db.query(User).filter(User.id == r.author_id).first()
+    return items
 
 
 @router.post("", response_model=UrgentRequestResponse, status_code=status.HTTP_201_CREATED)
@@ -60,6 +63,7 @@ def create_urgent(
         except Exception:
             pass
 
+    req.author = current_user
     return req
 
 
@@ -68,6 +72,7 @@ def get_urgent(request_id: str, db: Annotated[Session, Depends(get_db)]):
     req = db.query(UrgentRequest).filter(UrgentRequest.id == request_id).first()
     if not req:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Zahtev nije pronađen")
+    req.author = db.query(User).filter(User.id == req.author_id).first()
     return req
 
 

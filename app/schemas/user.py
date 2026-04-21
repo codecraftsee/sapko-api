@@ -23,3 +23,14 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     phone: Optional[str] = None
     city: Optional[str] = None
+
+
+class UserPublic(BaseModel):
+    id: str
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: EmailStr
+    city: Optional[str] = None
+
+    class Config:
+        from_attributes = True

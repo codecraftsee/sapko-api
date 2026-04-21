@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional
 from app.models.adoption import AdoptionStatus
 from app.schemas.pet import PetResponse
+from app.schemas.user import UserPublic
 
 
 class AdoptionListingCreate(BaseModel):
@@ -22,6 +23,7 @@ class AdoptionListingResponse(BaseModel):
     status: AdoptionStatus
     created_at: datetime
     pet: Optional[PetResponse] = None
+    owner: Optional[UserPublic] = None
 
     class Config:
         from_attributes = True
