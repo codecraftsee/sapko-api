@@ -12,11 +12,8 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:4200,https://sapko.vercel.app"
     frontend_url: str = "http://localhost:4200"
 
-    smtp_host: str = "sandbox.smtp.mailtrap.io"
-    smtp_port: int = 587
-    smtp_user: str = ""
-    smtp_password: str = ""
-    smtp_from: str = "noreply@sapko.rs"
+    resend_api_key: str = ""
+    email_from: str = "noreply@sapko.rs"
 
     upload_dir: str = "./uploads"
 
