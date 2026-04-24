@@ -1,5 +1,6 @@
+from datetime import datetime
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -10,6 +11,7 @@ from app.services.auth import (
     verify_password, get_password_hash,
     create_access_token, create_refresh_token, decode_token,
 )
+from app.services.email import generate_verification_token, send_verification_email
 from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
@@ -32,9 +34,31 @@ def register(request: RegisterRequest, db: Annotated[Session, Depends(get_db)]):
     db.commit()
     db.refresh(user)
 
+    token, expires_at = generate_verification_token()
+    user.email_verification_token = token
+    user.email_verification_expires_at = expires_at
+    db.commit()
+    send_verification_email(to=user.email, token=token)
+
     access_token = create_access_token(data={"sub": str(user.id), "role": user.role.value})
     refresh_token = create_refresh_token(data={"sub": str(user.id)})
     return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+
+
+@router.get("/verify-email")
+def verify_email(token: str = Query(...), db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email_verification_token == token).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Nevažeći verifikacioni token")
+    if user.is_verified:
+        return {"message": "Email adresa je već potvrđena"}
+    if user.email_verification_expires_at is None or datetime.utcnow() > user.email_verification_expires_at:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token je istekao")
+    user.is_verified = True
+    user.email_verification_token = None
+    user.email_verification_expires_at = None
+    db.commit()
+    return {"message": "Email adresa uspešno potvrđena"}
 
 
 @router.post("/login", response_model=TokenResponse)

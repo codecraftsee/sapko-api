@@ -3,6 +3,7 @@ from datetime import datetime, date
 from typing import Optional
 from app.models.donor import BloodGroup
 from app.schemas.pet import PetResponse
+from app.schemas.user import UserPublic
 
 
 class DonorRegistrationCreate(BaseModel):
@@ -28,6 +29,7 @@ class DonorRegistrationResponse(BaseModel):
     active: bool
     created_at: datetime
     pet: Optional[PetResponse] = None
+    owner: Optional[UserPublic] = None
 
     class Config:
         from_attributes = True

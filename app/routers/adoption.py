@@ -30,10 +30,12 @@ def list_adoptions(
     else:
         query = query.filter(AdoptionListing.status == AdoptionStatus.OPEN)
     listings = query.order_by(AdoptionListing.created_at.desc()).offset(offset).limit(limit).all()
-    # Eager load pet for response
+    # Eager load pet + owner for response
     result = []
     for l in listings:
-        l.pet = db.query(Pet).filter(Pet.id == l.pet_id).first()
+        pet = db.query(Pet).filter(Pet.id == l.pet_id).first()
+        l.pet = pet
+        l.owner = db.query(User).filter(User.id == pet.owner_id).first() if pet else None
         result.append(l)
     return result
 
@@ -55,6 +57,7 @@ def create_adoption(
     db.commit()
     db.refresh(listing)
     listing.pet = pet
+    listing.owner = db.query(User).filter(User.id == pet.owner_id).first()
     return listing
 
 
@@ -63,7 +66,9 @@ def get_adoption(listing_id: str, db: Annotated[Session, Depends(get_db)]):
     listing = db.query(AdoptionListing).filter(AdoptionListing.id == listing_id).first()
     if not listing:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Oglas nije pronađen")
-    listing.pet = db.query(Pet).filter(Pet.id == listing.pet_id).first()
+    pet = db.query(Pet).filter(Pet.id == listing.pet_id).first()
+    listing.pet = pet
+    listing.owner = db.query(User).filter(User.id == pet.owner_id).first() if pet else None
     return listing
 
 
