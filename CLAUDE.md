@@ -12,7 +12,7 @@
 python -m venv venv
 venv/Scripts/pip.exe install -r requirements.txt
 cp .env.example .env
-venv/Scripts/uvicorn.exe app.main:app --reload
+venv/Scripts/uvicorn.exe app.main:app --reload --port 8001
 ```
 
 ## User Roles

@@ -1,0 +1,15 @@
+.git
+.claude
+.env
+.env.*
+.venv
+venv
+__pycache__
+*.pyc
+*.db
+uploads
+tests
+.pytest_cache
+debug.log
+.vscode
+.idea
